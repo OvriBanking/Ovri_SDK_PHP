@@ -21,9 +21,9 @@ The simplest usage of the library would be as follow:
 require_once __DIR__ . '/vendor/autoload.php';
 
 $Ovri = new Ovri\Payment([
-'MerchantKey' => '<your-merchant-key>',
-'SecretKey' => '<your-secret-key>',
-'API' => 'https://api.ovri.app'
+	'MerchantKey' => '<your-merchant-key>',
+	'SecretKey' => '<your-secret-key>',
+	'API' => 'https://api.ovri.app'
 ]);
 
 $data = [
@@ -34,23 +34,26 @@ $data = [
 	'Customer_FirstName' => '<customer-firstname>'
 ];
 
-$reponse = $Ovri->initializePayment($data); 
-
-if($reponse['http'] === 201)
-{
- //Either you redirect the customer to the WEB payment url
- header('Location: ' . $reponse['DirectLinkIs']);
- //Or you just get the token to initiate one of our JS SDK libraries
- //@token is $reponse['SACS']
-}
-else
-{
-  //Error and display result
-	echo "Http CODE : ".$reponse['http']."<br>";
-	echo "OVRI CODE : ".$reponse['Error_Code']."<br>";
-	echo "Short error description :".$reponse['Short_Description']."<br>";
-	echo "Long error description : ".$reponse['Full_Description'];
-	
+$reponse = $Ovri->initializePayment($data);
+//201 success request (others code = failed)
+if ($reponse['http'] === 201) {
+	//Code is internal Ovri coding (200 success others is failed)
+	if ($reponse['Code'] === 200) {
+		//Either you redirect the customer to the WEB payment url
+		header('Location: ' . $reponse['DirectLinkIs']);
+		//Or you just get the token to initiate one of our JS SDK libraries
+		//@token is $reponse['SACS']
+	}
+} else {
+	//Error and display result
+	foreach ($reponse as $key => $value) {
+		//If key Explanation or MissingParameters array for explain error
+		if ($key === 'Explanation' || $key === 'MissingParameters') {
+			echo "<b>$key</b> =>  " . print_r($value, TRUE) . "<br>";
+		} else {
+			echo "<b>$key</b> =>  $value <br>";
+		}
+	}
 }
 ```
 To set up another type of payment, like a recurring payment, in several times or other see the api documentation to know which parameter can be inserted in $data[].
@@ -63,7 +66,7 @@ You can verify the status of the payment to see if the payment is done.
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$Moneytigo = new Ovri\Payment([
+$Ovri = new Ovri\Payment([
 'MerchantKey' => '<your-merchant-key>',
 'SecretKey' => '<your-secret-key>',
 'API' => 'https://api.ovri.app'
@@ -74,15 +77,14 @@ $data = [
 ];
 
 $reponse = $Ovri->getStatusPayment($data); 
-
-if($reponse['http'] === 201) {
-	print_r($reponse); //Displays the result of the transaction
-}
-else
-{
-	//An error has occurred you can see the reason
-	echo "OVRI CODE : ".$reponse['ErrorCode']."<br>";
-	echo "Short error description :".$reponse['ErrorDescription']."<br>";
+if ($reponse['http'] === 201) {
+	//Display All transaction information (success)
+	echo '<h1>Success request</h1>';
+	echo '<pre>' . print_r($reponse, true) . '</pre>';
+} else {
+	//Display Failed message
+	echo '<h1>Failed request</h1>';
+	echo '<pre>' . print_r($reponse, true) . '</pre>';
 }
 ```
 
