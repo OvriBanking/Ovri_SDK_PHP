@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class Moneytigo Payment
- * v 1.0.1 - 2021-06-15
- * This class allows the initialization of a payment to retrieve the token needed to use MoneyTigo libraries
+ * Class OVRI Payment
+ * v 1.0.1 - 2022-10-25
+ * This class allows the initialization of a payment to retrieve the token needed to use OVRI libraries
  */
 
-namespace moneytigo;
+namespace ovri;
 
 class Payment {
 
@@ -22,7 +22,7 @@ class Payment {
     $this->client = new\ GuzzleHttp\ Client();
   }
   /**
-   * GET request to MoneyTigo
+   * GET request to Ovri
    *
    * @param $url
    * @param bool $postParameters
@@ -102,7 +102,7 @@ class Payment {
   }
 
   /**
-   * Main function for initiating a token to start a web or iframe payment or via MoneyTigo libraries.
+   * Main function for initiating a token to start a web or iframe payment or via Ovri libraries.
    * Public @
    */
   public function initializePayment( $body ): array {
