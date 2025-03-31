@@ -2,7 +2,7 @@
 
 /**
  * Class OVRI Payment
- * v 1.0.2 - 2025-03-31
+ * v 1.0.3 - 2025-03-31
  * This class allows the initialization of a payment to retrieve the token needed to use OVRI libraries
  */
 
